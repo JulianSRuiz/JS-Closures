@@ -71,8 +71,9 @@ function makeCall() {
 properly. */
 
 function makeCounter() {
+      var counter = 0;
   return function count() {
-    return count += 1;
+    return counter += 1;
   }
 }
 
@@ -103,17 +104,19 @@ for incrementing the value once. The second function is called dec, this
 function is responsible for decrementing the value by one. You will need to use
 the module pattern to achieve this. */
 
-function counterFactory(value) {
-
-  // Code here.
-
-
+var counterFactory = (function counterFactory(value) {
   return {
+    inc: function() {
+      return value += 1;
+    },
+    dec: function() {
+      return value -= 1;
+    }
   }
-}
+});
 
 
-counter = counterFactory(10);
+var counter = counterFactory(10);
 
 
 
@@ -136,15 +139,17 @@ function motivation(firstname, lastname){
 
   var welcomeText = 'You\'re doing awesome, keep it up ';
 
-  // code message function here.
+  function message() {
+    return welcomeText + firstname +  " " + lastname + ".";
+  }
 
-
+console.log(message());
   //Uncommment this to return the value of your invoked message function
-  //return message();
+    return message();
 
 }
 
-motivation('Billy', 'Bob'); // 'Your doing awesome keep it up Billy Bob
+motivation('Billy', 'Bob'); // 'You're doing awesome keep it up Billy Bob
 
 
 
@@ -179,13 +184,15 @@ var module = (function() {
 	// outside our lexical scope
 
   return {
-    // Code here.
+    publicMethod: function(){
+      return privateMethod();
+    }
   };
 
 })();
 
 // Uncomment this after you create your public method
-//   module.publicMethod();
+module.publicMethod();
 
 
 
@@ -206,19 +213,35 @@ to 5. What we need to do is console.log(i) so that it logs ( 0 then 1 then 2
 then 3, etc). Run this code in your console to see what the output is. */
 
 // To make this code work you will need to create a new scope for every iteration.
-function timeOutCounter() {
-  for (var i = 0; i <= 5; i++) {
-    setTimeout(function() {
-      console.log(i);
-    }, i * 1000)
-  }
 
-  function newScope(i) {
-    console.log(i)
+// function timeOutCounter() {
+//   for (var i = 0; i <= 5; i++) {
+//     setTimeout(function() {
+//       console.log(i);
+//     }, i * 1000)
+//   }
+//
+//   function newScope(i) {
+//     return function() {
+//     console.log(i)
+//     }
+//   }
+// }
+// timeOutCounter();
+
+function timeOutCounter() {
+for (var i = 0; i <= 5; i++) {
+  var currentI = closure(i);
+  setTimeout(currentI, i * 1000);
+}
+
+function closure(param) {
+  return function() {
+    console.log(param);
+    }
   }
 }
 timeOutCounter();
-
 
 
 
@@ -229,6 +252,14 @@ timeOutCounter();
 \******************************************************************************/
 
 var funcArray = [];
+for( var i = 0; i < 6; i++ ){
+ 	(function(i){
+ 		funcArray.push(
+ 			function(){
+        return i;
+      });
+ 	})( i );
+ }
 
 /*
   Make the following code work
